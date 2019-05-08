@@ -49,11 +49,11 @@ void getProcessListToConsole(std::vector<string> processes,WINDOW* win){
 
     wattron(win,COLOR_PAIR(2));
     mvwprintw(win,1,2,"PID:");
-    mvwprintw(win,1,9,"User:");
-    mvwprintw(win,1,16,"CPU[%%]:");
-    mvwprintw(win,1,26,"RAM[MB]:");
-    mvwprintw(win,1,35,"Uptime:");
-    mvwprintw(win,1,44,"CMD:");
+    mvwprintw(win,1,8,"User:");
+    mvwprintw(win,1,17,"CPU[%%]:");
+    mvwprintw(win,1,25,"RAM[MB]:");
+    mvwprintw(win,1,36,"Uptime:");
+    mvwprintw(win,1,46,"CMD:");
     wattroff(win, COLOR_PAIR(2));
     for(int i=0; i< processes.size();i++){
         mvwprintw(win,2+i,2,getCString(processes[i]));
@@ -66,8 +66,8 @@ void printMain(SysInfo sys,ProcessContainer procs){
     start_color(); // Enabling color change of text
     int yMax,xMax;
     getmaxyx(stdscr,yMax,xMax); // getting size of window measured in lines and columns(column one char length)
-	WINDOW *sys_win = newwin(17,xMax-1,0,0);
-	WINDOW *proc_win = newwin(15,xMax-1,18,0);
+	WINDOW *sys_win = newwin(15,xMax-1,0,0);
+	WINDOW *proc_win = newwin(yMax-15,xMax-1,15,0);
 
 
     init_pair(1,COLOR_BLUE,COLOR_BLACK);
