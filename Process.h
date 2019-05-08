@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 using namespace std;
 /*
@@ -18,11 +19,10 @@ public:
     Process(string pid){
         this->pid = pid;
         this->user = ProcessParser::getProcUser(pid);
-        //TODOs:
-        //complete for mem
-        //complete for cmd
-        //complete for upTime
-        //complete for cpu
+        this->mem = ProcessParser::getVmSize(pid);
+        this->cmd = ProcessParser::getCmd(pid);
+        this->upTime = ProcessParser::getProcUpTime(pid);
+        this->cpu = ProcessParser::getCpuPercent(pid);
     }
     void setPid(int pid);
     string getPid()const;
@@ -46,5 +46,10 @@ string Process::getProcess(){
     this->upTime = ProcessParser::getProcUpTime(this->pid);
     this->cpu = ProcessParser::getCpuPercent(this->pid);
 
-    return (this->pid + "   " + //TODO: finish the string! this->user + "   "+ mem...cpu...upTime...;
+    return (this->pid + "\t" 
+        + this->user.substr(0,8) + "   " 
+        + this->cpu.substr(0,5) + "   " 
+        + this->mem.substr(0,5) + "      " 
+        + this->upTime.substr(0,5) + "  " 
+        + this->cmd.substr(0,30));
 }
