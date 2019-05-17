@@ -49,6 +49,8 @@ string ProcessParser::getCmd(string pid) {
     string line;
     ifstream stream = Util::getStream((Path::basePath() + pid + Path::cmdPath()));
     std::getline(stream, line);
+    
+    stream.close();
     return line;
 }
 
@@ -97,6 +99,7 @@ string ProcessParser::getVmSize(string pid) {
             break;
         }
     }
+    stream.close();
     return to_string(result);
 }
 
@@ -122,6 +125,8 @@ string ProcessParser::getCpuPercent(string pid) {
     float total_time = utime + stime + cutime + cstime;
     float seconds = uptime - (starttime/freq);
     result = 100.0*((total_time/freq)/seconds);
+
+    stream.close();
     return to_string(result);
 }
 
@@ -136,6 +141,8 @@ string ProcessParser::getProcUpTime(string pid) {
     istringstream buf(str);
     istream_iterator<string> beg(buf), end;
     vector<string> values(beg, end); // done!
+
+    stream.close();
     // Using sysconf to get clock ticks of the host machine
     return to_string(float(stof(values[13])/sysconf(_SC_CLK_TCK)));
 }
@@ -148,6 +155,8 @@ long int ProcessParser::getSysUpTime() {
     istringstream buf(line);
     istream_iterator<string> beg(buf), end;
     vector<string> values(beg, end);
+
+    stream.close();
     return stoi(values[0]);
 }
 
@@ -177,11 +186,14 @@ string ProcessParser::getProcUser(string pid) {
     while (std::getline(stream, line)) {
         if (line.find(name) != std::string::npos) {
             result = line.substr(0, line.find(":"));
+
+            stream.close();
             return result;
         }
     }
 
     // if we don't find it
+    stream.close();
     return "";
 }
 
@@ -196,9 +208,12 @@ int getNumberOfCores() {
             istringstream buf(line);
             istream_iterator<string> beg(buf), end;
             vector<string> values(beg, end);
+
+            stream.close();
             return stoi(values[3]);
         }
     }
+    stream.close();
     return 0;
 }
 
@@ -235,9 +250,13 @@ vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
             istream_iterator<string> beg(buf), end;
             vector<string> values(beg, end);
             // set of cpu data active and idle times;
+            stream.close();
+
             return values;
         }
     }
+    stream.close();
+
     return (vector<string>());
 }
 
@@ -277,6 +296,8 @@ float ProcessParser::getSysRamPercent() {
             buffers = stof(values[1]);
         }
     }
+    stream.close();
+
     //calculating usage:
     return float(100.0*(1-(free_mem/(total_mem-buffers))));
 }
@@ -291,9 +312,13 @@ string ProcessParser::getSysKernelVersion() {
             istringstream buf(line);
             istream_iterator<string> beg(buf), end;
             vector<string> values(beg, end);
+
+            stream.close();
             return values[2];
         }
     }
+    stream.close();
+
     return "";
 }
 
@@ -307,13 +332,17 @@ string ProcessParser::getOSName() {
 
     while (std::getline(stream, line)) {
         if (line.compare(0, name.size(), name) == 0) {
-              std::size_t found = line.find("=");
-              found++;
-              string result = line.substr(found);
-              result.erase(std::remove(result.begin(), result.end(), '"'), result.end());
-              return result;
+            std::size_t found = line.find("=");
+            found++;
+            string result = line.substr(found);
+            result.erase(std::remove(result.begin(), result.end(), '"'), result.end());
+
+            stream.close();
+            return result;
         }
     }
+    stream.close();
+
     return "";
 
 }
@@ -338,7 +367,9 @@ int ProcessParser::getTotalThreads() {
                 break;
             }
         }
+        stream.close();
     }
+
     return result;
 }
 
@@ -357,6 +388,8 @@ int ProcessParser::getTotalNumberOfProcesses() {
             break;
         }
     }
+    stream.close();
+
     return result;
 }
 
@@ -376,6 +409,8 @@ int ProcessParser::getNumberOfRunningProcesses() {
             break;
         }
     }
+    stream.close();
+
     return result;
 }
 
